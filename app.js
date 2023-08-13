@@ -2,7 +2,7 @@ const express = require("express");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
 const path = require("path");
-const databasePath = path.join(__dirname, "cricketMatchDetails.db");
+const databasePath = path.join(__dirname, "todoApplication.db");
 const app = express();
 app.use(express.json());
 let database = null;
@@ -34,19 +34,19 @@ const haspriority=(query1)=>{
 app.get("/todos/",async(request,response)=>{
   let data=null;
   let getquery=""
-  const {status,priority,search=""}=request.query
+  const {status,priority,search_q=""}=request.query
   switch(true){
     case hastwo(request.query):
-      getquery=`select * from todo where todo like '%${search}%' and status='${status}' and priority='${priority}'`
+      getquery=`select * from todo where todo like '%${search_q}%' and status='${status}' and priority='${priority}'`
       break
     case hasstatus(request.query):
-      getquery=`select * from todo where todo like '%${search}%' and status='${status}';`
+      getquery=`select * from todo where todo like '%${search-q}%' and status='${status}';`
       break
     case haspriority(request.query):
-      getquery=`select * from todo where todo like '%${search}%' and  priority='${priority}'`
+      getquery=`select * from todo where todo like '%${search_q}%' and  priority='${priority}'`
       break
     default:
-      getquery=`select * from todo where todo like '%${search}%'`
+      getquery=`select * from todo where todo like '%${search_q}%'`
   }
   data=await database.all(getquery)
   response.send(data)
